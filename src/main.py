@@ -137,20 +137,21 @@ def pep(session):
                 dd_text = dd_tag.text
 
         to_count.append(dd_text)
-        if dd_text not in EXPECTED_STATUS[preview_status]:
+        if preview_status in EXPECTED_STATUS:
+            if dd_text not in EXPECTED_STATUS[preview_status]:
+                logging.info(f'Несовпадающий статус:\n{pep_doc_link}\n'
+                             f'Статус в карточке: {dd_text}\n'
+                             f'Ожидаемые статусы:'
+                             f'{list(EXPECTED_STATUS[preview_status])}')
+        else:
             logging.info(f'Несовпадающий статус:\n{pep_doc_link}\n'
                          f'Статус в карточке: {dd_text}\n'
-                         f'Ожидаемые статусы:'
-                         f'{list(EXPECTED_STATUS[preview_status])}')
+                         f'Статус в таблице: {preview_status}')
 
     count_sum = Counter(to_count)
     total_sum = len(to_count)
 
-    for key, value in count_sum.items():
-        results.append(
-            (key, value)
-        )
-
+    results.extend(count_sum.items())
     results.append(
         ('Total', total_sum)
     )
